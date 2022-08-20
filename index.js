@@ -5,8 +5,9 @@ import mongoose from "mongoose";
 import cors from 'cors';
 import path from 'path';
 
-import paymentRoute from "./routes/payment-routes";
-import clientRoute from "./routes/client-routes"
+import paymentRoute from "./routes/payment-routes.js";
+import clientRoute from "./routes/client-routes.js";
+
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -19,12 +20,10 @@ app.use(express.json());
 
 app.use(cors());
 
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-    app.use(express.static('client/build'));
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname + '/client/build/index.html'));
-    });
-}
+// if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+//     app.use(express.static('client/build'));
+
+// }
 
 app.use("/api/payment", paymentRoute);
 app.use("/api/client", clientRoute);

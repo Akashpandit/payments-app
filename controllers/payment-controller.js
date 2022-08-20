@@ -4,8 +4,8 @@
 //3. Delete the payment
 
 import mongoose from "mongoose";
-import Payment from "../model/Payment";
-import Client from "../model/Client"
+import Payment from "../model/Payment.js";
+import Client from "../model/Client.js"
 
 export const addPayment = async (req, res, next) => {
     const { amount, date, description, paymentMode, client } = req.body;

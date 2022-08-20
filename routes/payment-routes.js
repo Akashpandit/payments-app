@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express.Router();
 
-import { addPayment, getAllPayments, editPayment, deletePaymentById, getPaymentById, clientPayments } from '../controllers/payment-controller';
+import { addPayment, getAllPayments, editPayment, deletePaymentById, getPaymentById, clientPayments } from '../controllers/payment-controller.js';
 
 router.post("/addPayment", addPayment);
 router.get("/getpayments", getAllPayments);
