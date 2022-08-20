@@ -27,7 +27,7 @@ const AddPayment = () => {
     }
     const sendRequest = async () => {
         const res = await axios
-            .post("/api/payment/addPayment", {
+            .post(`${process.env.REACT_APP_BASEURL}/api/payment/addPayment`, {
                 amount: inputs.amount,
                 date: inputs.date,
                 description: inputs.description,

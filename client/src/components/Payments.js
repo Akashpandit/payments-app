@@ -19,7 +19,7 @@ const Payments = () => {
 
     const sendRequest = async () => {
         const res = await axios
-            .get(`/api/payment/client/${id}`)
+            .get(`${process.env.REACT_APP_BASEURL}/api/payment/client/${id}`)
             .catch((err) => console.log(err));
 
         const data = await res.data;

@@ -30,7 +30,7 @@ const AuthSignup = () => {
 
     const sendRequest = async (type = "signup") => {
         const res = await axios
-            .post(`/api/client/${type}`, {
+            .post(`${process.env.REACT_APP_BASEURL}/api/client/${type}`, {
                 name: inputs.name,
                 contact: inputs.contact,
                 password: inputs.password,

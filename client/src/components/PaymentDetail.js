@@ -25,7 +25,7 @@ const PaymentDetail = () => {
     const fetchPaymentDetail = async () => {
 
         const res = await axios
-            .get(`/api/payment/${id}`)
+            .get(`${process.env.REACT_APP_BASEURL}/api/payment/${id}`)
             .catch((err) => console.log(err));
 
         const data = await res.data;
@@ -50,7 +50,7 @@ const PaymentDetail = () => {
     const sendRequest = async () => {
 
         const res = await axios
-            .put(`/api/payment/edit/${id}`, {
+            .put(`${process.env.REACT_APP_BASEURL}/api/payment/edit/${id}`, {
                 amount: inputs.amount,
                 date: inputs.date,
                 description: inputs.description,

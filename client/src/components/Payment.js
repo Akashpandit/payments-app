@@ -29,7 +29,7 @@ const Payment = ({ amount, date, description, paymentMode, isClient, id }) => {
 
     const deleteRequest = async () => {
         const res = await axios
-            .delete(`/api/payment/delete/${id}`)
+            .delete(`${process.env.REACT_APP_BASEURL}/api/payment/delete/${id}`)
             .catch((err) => console.log(err))
 
         const data = await res.data;
