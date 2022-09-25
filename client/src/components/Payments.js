@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import NavBar from './NavBar'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Payment from "./Payment";
-import { Box, Card, Typography, TextField, Button, Stack, Alert, AlertTitle } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import AlertBox from "./AlertBox";
 
 
 
@@ -16,7 +16,10 @@ const Payments = () => {
     const id = localStorage.getItem("clientId");
 
     const [client, setClient] = useState();
-
+    const [payCount, setPayCount] = useState();
+    const [sumAmt, setSumAmt] = useState(0);
+    //for alert
+    const [openAlert, setOpenAlert] = useState(false);
     const sendRequest = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_BASEURL}/api/payment/client/${id}`)
@@ -28,12 +31,24 @@ const Payments = () => {
     localStorage.setItem("totalSum", 0);
     useEffect(() => {
         sendRequest()
-            .then((data) => setClient(data.client))
-            .then(() => console.log("Total: " + localStorage.getItem("totalSum") / 2))
+            .then((data) => {
+                setClient(data.client)
+                setPayCount(data.client.payments.length)
+                console.log(data.client.payments.length)
+            })
+
 
     }, []);
-
-    console.log(client);
+    function formatAmount(amount) {
+        let x = amount + ""
+        var lastThree = x.substring(x.length - 3);
+        var otherNumbers = x.substring(0, x.length - 3);
+        if (otherNumbers !== '')
+            lastThree = ',' + lastThree;
+        amount = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+        return amount;
+    }
+    var sumTotal;
     return (
         <div>
             <Box container textAlign={"left"} sx={{
@@ -48,11 +63,13 @@ const Payments = () => {
             }}>
                 <Button variant="outlined" color="primary" size="small" sx={{ marginRight: "5px" }}
                     onClick={() => {
-                        <NavBar />
-                        let sumTotal = localStorage.getItem("totalSum");
-                        sumTotal = sumTotal / 2;
-                        window.alert(`Total Amount Received ${sumTotal}`)
+                        sumTotal = localStorage.getItem("totalSum");
+                        // sumTotal = sumTotal / 2;
+                        sumTotal = formatAmount(sumTotal)
+                        setSumAmt(sumTotal);
+                        setOpenAlert(true)
                     }}
+
                 >Show Total</Button>
                 <Box display='flex' marginLeft='auto'>
                     <Button variant="text" color="primary" size="small" textAlign="right" LinkComponent={Link} to='/clientDetail'
@@ -63,18 +80,23 @@ const Payments = () => {
 
 
             </Box>
+            {payCount < 1 ? (
 
+                <Typography>Nothing to show. Add payments to see something here.</Typography>
+            ) : ("")}
             {client &&
                 client.payments &&
+
                 client.payments.map((payment, index) => (
 
-                    <Payment
+                    < Payment
                         key={index}
                         isClient={true}
                         id={payment._id}
                         amount={payment.amount}
                         date={payment.date}
                         paymentMode={payment.paymentMode}
+                        paymentType={payment.paymentType}
                         description={payment.description}
 
                     />
@@ -82,27 +104,14 @@ const Payments = () => {
                 )).reverse()
             }
 
-            {/* Displaying no payments message */}
-            {/* {client &&
-                client.payments && 
-                <Box color={"error"} sx={{
-                    width: "92%", borderRadius: "5px",
-                    margin: "auto",
-                    marginTop: 1,
-                    padding: 1,
-                    flexGrow: 1,
-                    display: "flex",
 
+            <AlertBox
+                title="Total Amount"
+                children={"₹ " + sumAmt}
+                openAlert={openAlert}
+                setOpenAlert={setOpenAlert}>
 
-                }}>
-                    <Typography color={"error"} sx={{ textAlign: "center" }} >
-
-                        Nothing to show here
-                    </Typography>
-                </Box>
-            } */}
-
-
+            </AlertBox>
         </div>
     )
 

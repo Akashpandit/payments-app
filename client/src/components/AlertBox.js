@@ -1,49 +1,36 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Button, Box, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
+import React from 'react'
 
-export default function AlertDialog() {
-    const [open, setOpen] = React.useState(false);
+export default function AlertBox(props) {
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
+    const { title, children, openAlert, setOpenAlert, color = "primary" } = props;
     return (
-        <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                Open alert dialog
-            </Button>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Use Google's location service?"}
+        <Dialog open={openAlert} maxWidth="md"  >
+            <div style={{ padding: 10 }}>
+                <DialogTitle style={{ padding: 5, borderBottom: "1px solid purple" }}>
+                    <div style={{ display: "flex" }} >
+                        <Typography variant='h6' textAlign={"center"} component={"div"} style={{ flexGrow: 1, marginRight: "10px" }}>
+
+                            {title}
+
+
+                        </Typography>
+
+                    </div>
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Let Google help apps determine location. This means sending anonymous
-                        location data to Google, even when no apps are running.
-                    </DialogContentText>
+                    <Typography variant='h6' mt={2} textAlign={"center"} color={color}>
+
+                        {children}
+                    </Typography>
+
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Disagree</Button>
-                    <Button onClick={handleClose} autoFocus>
-                        Agree
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    );
+                <Box textAlign={"center"}>
+
+                    <Button onClick={() => setOpenAlert(false)} variant='contained' style={{ width: "5px", padding: 0, backgroundColor: "#0000ff" }}  >OK</Button>
+                </Box>
+
+            </div>
+        </Dialog>
+    )
 }

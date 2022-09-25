@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 import { authActions } from '../store/Index';
+import AlertBox from './AlertBox';
 
 const AuthSignup = () => {
     const navigate = useNavigate();
@@ -13,13 +14,14 @@ const AuthSignup = () => {
 
     const [inputs, setInputs] = useState({
         name: "",
+        email: "",
         contact: "",
         password: "",
-        area: "",
         description: ""
     });
 
-    const [isSignup, setIsSignup] = useState(false);
+    //Alert Box
+    const [openAlert, setOpenAlert] = useState(false);
 
     const handleChange = (e) => {
         setInputs((prevState) => ({
@@ -30,15 +32,15 @@ const AuthSignup = () => {
 
     const sendRequest = async (type = "signup") => {
         const res = await axios
-            .post(`${process.env.REACT_APP_BASEURL}/api/client/${type}`, {
+            .post(`${process.env.REACT_APP_BASEURL}/api/user/${type}`, {
                 name: inputs.name,
+                email: inputs.email,
                 contact: inputs.contact,
                 password: inputs.password,
-                area: inputs.area,
                 description: inputs.description
             })
             .catch((err) => console.log(err));
-
+        console.log(res)
         const data = await res.data;
         console.log(data);
         return data;
@@ -48,15 +50,21 @@ const AuthSignup = () => {
         e.preventDefault();
         console.log(inputs);
         sendRequest()
-            .then((data) => localStorage.setItem("clientId", data.client._id))
+            .then((data) => localStorage.setItem("userId", data.user._id))
             .then(() => dispatch(authActions.logout()))
-            .then(() => window.alert("Client added successfully. Login to Continue."))
-            .then(() => navigate("/auth"));
+            .then(() => navigate("/auth"))
+            .then(setOpenAlert(true));
     }
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
+                <AlertBox
+                    title="Success"
+                    children="User Added Successfully. Login to Continue"
+                    openAlert={openAlert}
+                    setOpenAlert={setOpenAlert}
+                ></AlertBox>
                 <Box
 
                     display="flex"
@@ -67,8 +75,8 @@ const AuthSignup = () => {
                     boxShadow="1px 1px 20px #ccc"
 
                     borderRadius={2}
-                    sx={{ margin: "auto", textAlign: 'center', width: "90%" }}
-                    marginTop={5}>
+                    sx={{ margin: "auto", marginTop: 3, textAlign: 'center', width: "90%" }}
+                >
                     <Typography
                         variant='h4'
                         padding={1}
@@ -81,6 +89,14 @@ const AuthSignup = () => {
                         name='name'
                         placeholder='Name'
                         value={inputs.name}
+                        sx={{ margin: "5px", width: "90%" }}
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        type={'email'}
+                        name='email'
+                        placeholder='Email'
+                        value={inputs.email}
                         sx={{ margin: "5px", width: "90%" }}
                         onChange={handleChange}
                     />
@@ -104,14 +120,7 @@ const AuthSignup = () => {
                         value={inputs.password}
                         onChange={handleChange}
                     />
-                    <TextField
-                        type={'text'}
-                        name='area'
-                        placeholder='Area'
-                        value={inputs.area}
-                        sx={{ margin: "5px", width: "90%" }}
-                        onChange={handleChange}
-                    />
+
                     <TextField
                         type={'text'}
                         name='description'

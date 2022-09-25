@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Select, MenuItem, Button, InputLabel, TextField, Typography } from '@mui/material';
+import { Box, Button, InputLabel, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useStyles } from "./Utils";
@@ -8,15 +8,16 @@ import { Link } from 'react-router-dom';
 
 const labelStyles = { fontSize: "20px", fontWeight: "bold", mb: 0, mt: 1 }
 
-const AddPayment = () => {
+const AddClient = () => {
     const classes = useStyles();
     const navigate = useNavigate();
 
     const [inputs, setInputs] = useState({
-        amount: "",
-        date: "",
-        description: "",
-        paymentMode: ""
+        name: "",
+        email: "",
+        contact: "",
+        area: "",
+        description: ""
 
     })
     const [openAlert, setOpenAlert] = useState(false);
@@ -28,17 +29,16 @@ const AddPayment = () => {
         }))
     }
     const sendRequest = async () => {
-        setOpenAlert(true)
         const res = await axios
-            .post(`${process.env.REACT_APP_BASEURL}/api/payment/addPayment`, {
-                amount: inputs.amount,
-                date: inputs.date,
+            .post(`${process.env.REACT_APP_BASEURL}/api/client/addClient`, {
+                name: inputs.name,
+                email: inputs.email,
+                contact: inputs.contact,
+                area: inputs.area,
                 description: inputs.description,
-                paymentMode: inputs.paymentMode,
-                client: localStorage.getItem("clientId")
+                user: localStorage.getItem("userId")
             })
             .catch((err) => console.log(err));
-        setOpenAlert(false)
 
         const data = await res.data;
         return data;
@@ -48,15 +48,15 @@ const AddPayment = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         sendRequest()
-            // .then(setOpenAlert(true))
-            .then(() => navigate("/client/payments"))
+            .then(setOpenAlert(true))
+            .then(() => navigate("/clients"))
     }
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <AlertBox
                     title="Success"
-                    children="Adding Payment. Please Wait."
+                    children="Added Successfully."
                     openAlert={openAlert}
                     setOpenAlert={setOpenAlert}
                 ></AlertBox>
@@ -72,16 +72,16 @@ const AddPayment = () => {
                     padding={3}
                 >
                     <Typography textAlign={"center"} variant="h5">
-                        Add Payment
+                        Add New Sender/Receiver
                         <hr color="purple" />
                     </Typography>
                     <InputLabel
                         className="classes.font"
                         sx={labelStyles}
-                    >Amount</InputLabel>
+                    >Name</InputLabel>
                     <TextField
                         className={classes.font}
-                        name="amount"
+                        name="name"
                         variant="outlined"
                         value={inputs.value}
                         onChange={handleChange}
@@ -91,12 +91,38 @@ const AddPayment = () => {
                         className="classes.font"
                         sx={labelStyles}
 
-                    >Date
+                    >Email
                     </InputLabel>
                     <TextField
                         className={classes.font}
-                        name="date"
-                        type={"date"}
+                        name="email"
+                        type={"email"}
+                        variant="outlined"
+                        value={inputs.value}
+                        onChange={handleChange}
+                    />
+                    <InputLabel
+                        className="classes.font"
+                        sx={labelStyles}
+
+                    >Contact
+                    </InputLabel>
+                    <TextField
+                        className={classes.font}
+                        name="contact"
+                        variant="outlined"
+                        value={inputs.value}
+                        onChange={handleChange}
+                    />
+                    <InputLabel
+                        className="classes.font"
+                        sx={labelStyles}
+
+                    >Area
+                    </InputLabel>
+                    <TextField
+                        className={classes.font}
+                        name="area"
                         variant="outlined"
                         value={inputs.value}
                         onChange={handleChange}
@@ -114,40 +140,7 @@ const AddPayment = () => {
                         value={inputs.value}
                         onChange={handleChange}
                     />
-                    <InputLabel
-                        className="classes.font"
-                        sx={labelStyles}
 
-                    >Payment Mode
-                    </InputLabel>
-                    <Select
-                        name="paymentMode"
-                        value={inputs.value}
-                        label="payMode"
-                        onChange={handleChange}
-
-                    >
-                        <MenuItem value={"Cash"}>Cash</MenuItem>
-                        <MenuItem value={"UPI"}>UPI</MenuItem>
-                        <MenuItem value={"Cheque"}>Cheque</MenuItem>
-                        <MenuItem value={"Other"}>Other</MenuItem>
-                    </Select>
-                    <InputLabel
-                        className="classes.font"
-                        sx={labelStyles}
-
-                    >Payment Type
-                    </InputLabel>
-                    <Select
-                        name="paymentType"
-                        value={inputs.value}
-                        label="payType"
-                        onChange={handleChange}
-
-                    >
-                        <MenuItem value={"Received"}>Received</MenuItem>
-                        <MenuItem value={"Sent"}>Sent</MenuItem>
-                    </Select>
                     <Box textAlign={"center"} mt={2}>
 
 
@@ -162,7 +155,7 @@ const AddPayment = () => {
 
                             type="submit"
                         >Add</Button>
-                        <Button variant="outlined" color="error" sx={{ marginLeft: 1, borderRadius: 2, }} LinkComponent={Link} to="/client/payments">Cancel</Button>
+                        <Button variant="outlined" color="error" sx={{ marginLeft: 1, borderRadius: 2, }} LinkComponent={Link} to="/payments">Cancel</Button>
 
                     </Box>
                 </Box>
@@ -172,4 +165,4 @@ const AddPayment = () => {
 
 }
 
-export default AddPayment
+export default AddClient

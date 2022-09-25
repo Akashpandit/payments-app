@@ -22,12 +22,12 @@ const NavBar = () => {
             <Toolbar>
                 {isLoggedIn ? (
 
-                    <Button variant='text' sx={{ color: "white" }} LinkComponent={Link} to='/payments'>
-                        MyPayments
+                    <Button variant='text' sx={{ color: "white" }} LinkComponent={Link} to='/clients'>
+                        TrackPay
                     </Button>
                 ) : (
                     <Button variant='text' sx={{ color: "white" }} LinkComponent={Link} to='/auth'>
-                        MyPayments
+                        TrackPay
                     </Button>
                 )}
 
@@ -42,9 +42,9 @@ const NavBar = () => {
                     {isLoggedIn && (
                         <>
                             <Button variant='contained' color='warning' size='small' sx={{
-
+                                fontSize: "10px",
                                 margin: 1, borderRadius: 2, background: "purple", color: 'white', backgroundColor: 'transparent', borderColor: "white", border: "1px solid"
-                            }} LinkComponent={Link} to='/payments/add'>Add Payment</Button>
+                            }} LinkComponent={Link} to='/client/add'>Add Client</Button>
                             <Button size='small' onClick={() => dispatch(authActions.logout())} color="warning" variant="contained" sx={{ margin: 1, borderRadius: 2, backgroundColor: 'transparent' }} LinkComponent={Link} to="/auth">Logout</Button>
                         </>
                     )}

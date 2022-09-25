@@ -3,6 +3,7 @@ import { Box, Select, MenuItem, Button, InputLabel, TextField, Typography } from
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useStyles } from "./Utils";
+import { Link } from 'react-router-dom';
 
 
 const labelStyles = { fontSize: "20px", fontWeight: "bold", mb: 0, mt: 1 }
@@ -35,13 +36,15 @@ const PaymentDetail = () => {
     useEffect(() => {
         fetchPaymentDetail().then((data) => {
             setPayment(data.payment);
+            console.log(data.payment)
             let dateNew = data.payment.date + "";
             dateNew = dateNew.substring(0, 10);
             setInputs({
                 amount: data.payment.amount,
                 date: dateNew,
                 description: data.payment.description,
-                paymentMode: data.payment.paymentMode
+                paymentMode: data.payment.paymentMode,
+                paymentType: data.payment.paymentType
             })
         })
     }, [id])
@@ -55,6 +58,7 @@ const PaymentDetail = () => {
                 date: inputs.date,
                 description: inputs.description,
                 paymentMode: inputs.paymentMode,
+                paymentType: inputs.paymentType,
                 client: localStorage.getItem("clientId")
             })
             .catch((err) => console.log(err));
@@ -67,7 +71,7 @@ const PaymentDetail = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         sendRequest()
-            .then(() => navigate("/payments"))
+            .then(() => navigate("/client/payments"))
     }
 
     return (
@@ -137,23 +141,43 @@ const PaymentDetail = () => {
                         <Select
                             name="paymentMode"
                             value={inputs.paymentMode}
-                            label="Age"
+                            label="payMode"
                             onChange={handleChange}
                         >
                             <MenuItem value={"Cash"}>Cash</MenuItem>
+                            <MenuItem value={"UPI"}>UPI</MenuItem>
                             <MenuItem value={"Cheque"}>Cheque</MenuItem>
                             <MenuItem value={"Other"}>Other</MenuItem>
                         </Select>
-                        <Button
-                            sx={{
-                                mt: 2,
-                                borderRadius: 4
-                            }}
-                            variant="contained"
-                            color="warning"
-                            type="submit"
-                        >Update</Button>
+                        <InputLabel
+                            className="classes.font"
+                            sx={labelStyles}
 
+                        >Payment Type
+                        </InputLabel>
+                        <Select
+                            name="paymentType"
+                            value={inputs.paymentType}
+                            label="payType"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value={"Received"}>Received</MenuItem>
+                            <MenuItem value={"Sent"}>Sent</MenuItem>
+                        </Select>
+                        <Box textAlign={"center"} mt={2}>
+                            <Button
+                                sx={{
+
+                                    borderRadius: 2,
+
+                                    backgroundColor: "#0000ff"
+                                }}
+                                variant="contained"
+
+                                type="submit"
+                            >Update</Button>
+                            <Button variant="outlined" color="error" sx={{ marginLeft: 1 }} LinkComponent={Link} to="/client/payments">Cancel</Button>
+                        </Box>
                     </Box>
                 </form>
             )}

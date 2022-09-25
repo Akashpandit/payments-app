@@ -1,15 +1,15 @@
 import * as React from 'react';
+import { useState } from "react";
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
-import IconButton from '@mui/material/IconButton';
-import { Card, CardContent, CardHeader, CardMedia, Box, Button } from '@mui/material';
-import { useStyles } from "./Utils";
+import { Button, Divider } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { padding } from "@mui/system";
+import AlertBox from './AlertBox';
+
 
 const Img = styled('img')({
     margin: 'auto',
@@ -18,9 +18,13 @@ const Img = styled('img')({
     maxHeight: '100%',
 });
 
-const Payment = ({ amount, date, description, paymentMode, isClient, id }) => {
-    const classes = useStyles();
+const Payment = ({ amount, date, description, paymentMode, paymentType, isClient, id }) => {
     const navigate = useNavigate();
+
+
+    //alert box
+    const [openAlert, setOpenAlert] = useState(false);
+
 
     const handleEdit = () => {
         navigate(`/myPayments/${id}`);
@@ -41,8 +45,10 @@ const Payment = ({ amount, date, description, paymentMode, isClient, id }) => {
 
         if (window.confirm("Are you sure?")) {
             deleteRequest()
+                .then(setOpenAlert(true))
                 .then(() => navigate("/"))
-                .then(() => navigate("/payments"))
+                .then(() => navigate("/client/payments"))
+                .then(() => window.location.reload())
         }
 
 
@@ -76,26 +82,103 @@ const Payment = ({ amount, date, description, paymentMode, isClient, id }) => {
 
     return (
         <div >
+            <AlertBox
+                title="Success"
+                children="Amount Deleted"
+                openAlert={openAlert}
+                setOpenAlert={setOpenAlert}
+            ></AlertBox>
             <Paper
                 sx={{
-                    width: "90%",
+                    width: "88%",
                     margin: "auto",
                     marginTop: 2,
-                    padding: 2,
+                    padding: 1,
                     flexGrow: 1,
-                    boxShadow: "5px 5px 10px #ccc",
+                    boxShadow: "1px 2px 10px #ccc",
                     ":hover": {
                         boxShadow: "10px 10px 20px #ccc",
                     },
                 }}
             >
-                <Grid container spacing={2}>
-                    <Grid item>
-                        <ButtonBase sx={{ width: 50, height: 50 }}>
+                <Grid spacing={2} display="flex" flexDirection={"row"}>
+                    <Grid paddingRight={"6px"} display={'flex'} flexDirection="row" alignContent={"center"} alignItems="center" justifyContent={'center'} >
+
+                        <ButtonBase sx={{ width: "40px" }}>
 
                             {(paymentMode === "Cash") ? (<Img alt="Cash" src={process.env.PUBLIC_URL + '/cash-icon.png'} />) : (<Img alt="Cheque" src={process.env.PUBLIC_URL + '/cheque.png'} />)}
 
                         </ButtonBase>
+                    </Grid>
+                    <Grid display={"flex"} flexGrow={1} alignContent={"center"} alignItems="center">
+                        <Grid display={"flex"} flexDirection="column" >
+                            <Grid display={"flex"} flexDirection="column" alignContent={"center"} alignItems="left">
+                                <Typography
+                                    sx={{
+                                        marginBottom: 0, padding: 0, marginTop: 0
+
+                                    }}
+                                    gutterBottom variant="h6" >
+                                    {datestr}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        marginBottom: 0,
+                                        padding: 0,
+                                        marginTop: 0,
+
+                                    }}
+                                    variant="subtitle2" >
+                                    {weekday[dayToday]} &#8226; {paymentMode}
+                                    <Divider />
+                                </Typography>
+
+                            </Grid>
+                            <Grid display={"flex"} flexDirection="column">
+
+                                <Typography style={{ overflowWrap: 'break-word' }}
+
+                                    variant="body2" >
+
+                                    {description}
+                                </Typography>
+
+                            </Grid>
+
+                        </Grid>
+                    </Grid>
+                    <Grid xs={4} display={"flex"} flexDirection="column" alignItems="end" justifyContent={'center'} sx={{ padding: "1px" }}>
+
+                        <Typography
+                            sx={{
+                                color: "#422ade",
+                                paddingRight: "1px",
+                                fontSize: "125%"
+
+
+                            }}
+                        >
+                            <b> &#8377; {amountFormatted} </b>
+                        </Typography>
+
+
+                        <Grid display={"flex"} mt={"7px"} >
+                            <Button sx={{ padding: "0px", borderRight: "1px solid", borderRadius: 0 }} onClick={handleEdit} endIcon={<Img alt="edit" width={"20px"} src={process.env.PUBLIC_URL + '/edit.png'} />}></Button>
+                            <Button sx={{ padding: "0px" }} onClick={handleDelete} startIcon={<Img alt="edit" width={"20px"} src={process.env.PUBLIC_URL + '/delete.png'} />}> </Button>
+                        </Grid>
+
+                    </Grid>
+
+                </Grid>
+
+                {/* <Grid container spacing={2}>
+                    <Grid display={'flex'} flexDirection="row" alignContent={"center"} alignItems="center" padding={1}>
+                        <ButtonBase sx={{ width: "50px" }}>
+
+                            {(paymentMode === "Cash") ? (<Img alt="Cash" src={process.env.PUBLIC_URL + '/cash-icon.png'} />) : (<Img alt="Cheque" src={process.env.PUBLIC_URL + '/cheque.png'} />)}
+
+                        </ButtonBase>
+
                     </Grid>
                     <Grid item xs={12} sm container>
                         <Grid item xs container direction="column" spacing={2}>
@@ -170,10 +253,10 @@ const Payment = ({ amount, date, description, paymentMode, isClient, id }) => {
                             </Box>
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Paper>
 
-        </div>
+        </div >
     )
 
 }

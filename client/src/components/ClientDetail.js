@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Typography, Box, Button, Grid, Items, Item, Paper, Avatar, CardHeader, CardContent } from '@mui/material';
-import { useStyles } from './Utils';
-import { deepOrange, deepPurple } from '@mui/material/colors';
+import { Typography, Button, Grid, Paper, Avatar } from '@mui/material';
 
-
-import { useSelector, useDispatch } from 'react-redux';
-import { authActions } from '../store/Index';
 
 const ClientDetail = () => {
 
@@ -16,11 +11,11 @@ const ClientDetail = () => {
 
                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} p={2}>
 
-                    <Grid item xs={12} display="flex" direction={"row"}  >
+                    <Grid container item xs={12} display="flex" direction={"row"} alignItems="center"  >
                         <Avatar sx={{ bgcolor: "purple" }}>{localStorage.getItem("clientName").charAt(0)}</Avatar>
 
 
-                        <Typography marginLeft={1} marginTop={1} variant='h5' color={"primary"}>{localStorage.getItem("clientName")}
+                        <Typography marginLeft={1} marginTop={1} variant='h4' color={"primary"}>{localStorage.getItem("clientName")}
                         </Typography>
 
 
@@ -30,16 +25,16 @@ const ClientDetail = () => {
                     <Grid item xs={8} >
 
 
-                        <Typography variant='subtitle1' color={"secondary"}>Contact Number: {localStorage.getItem("clientContact")} </Typography>
+                        <Typography variant='body1'> <b> Contact Number: </b>{localStorage.getItem("clientContact")} </Typography>
 
 
                     </Grid>
                     <Grid item xs={4} >
-                        <Typography variant='subtitle1' color={"secondary"}>Area: {localStorage.getItem("clientArea")} </Typography>
+                        <Typography variant='body1' ><b> Area:</b> {localStorage.getItem("clientArea")} </Typography>
 
                     </Grid>
                     <Grid item xs={12} >
-                        <Typography variant='subtitle1' color={"secondary"}>Description: {localStorage.getItem("clientDesc")} </Typography>
+                        <Typography variant='body1' ><b> Description: </b> {localStorage.getItem("clientDesc")} </Typography>
 
                     </Grid>
 
@@ -47,12 +42,10 @@ const ClientDetail = () => {
                 </Grid>
                 <Grid textAlign={"center"} >
 
-                    <Button variant='outlined' sx={{ margin: 2 }} LinkComponent={Link} to='/payments'>Go To Payments</Button>
+                    <Button variant='contained' sx={{ margin: 2, borderRadius: 2, backgroundColor: "#0000ff" }} LinkComponent={Link} to='/payments'>Go To Payments</Button>
                 </Grid>
             </Paper></>
-        // <Box>
-        //     <Typography>Hello {localStorage.getItem("clientName")}</Typography>
-        // </Box>
+
 
     )
 }

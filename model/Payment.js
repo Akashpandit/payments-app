@@ -18,6 +18,9 @@ const paymentSchema = new Schema({
     paymentMode: {
         type: String
     },
+    paymentType: {
+        type: String,
+    },
     client: {
         type: mongoose.Types.ObjectId,
         ref: "Client",

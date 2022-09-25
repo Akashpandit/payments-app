@@ -9,6 +9,7 @@ const authSlice = createSlice({
         },
         logout(state) {
             localStorage.removeItem("clientId");
+            localStorage.removeItem("userId");
             localStorage.removeItem("clientDesc");
             localStorage.removeItem("clientName");
             localStorage.removeItem("totalSum");

@@ -8,13 +8,13 @@ const clientSchema = new Schema({
         required: true,
         trim: true
     },
+    email: {
+        type: String,
+        trim: true
+    },
     contact: {
         type: String,
         trim: true,
-    },
-    password: {
-        type: String,
-        required: true
     },
     area: {
         type: String
@@ -22,7 +22,18 @@ const clientSchema = new Schema({
     description: {
         type: String
     },
-    payments: [{ type: mongoose.Types.ObjectId, ref: "Payment" }]
+    payments: [{ type: mongoose.Types.ObjectId, ref: "Payment" }],
+    totalSent: {
+        type: Number
+    },
+    totalReceived: {
+        type: Number
+    },
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true
+    }
 });
 
 export default mongoose.model("Client", clientSchema);

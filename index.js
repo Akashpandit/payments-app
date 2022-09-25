@@ -7,6 +7,7 @@ import path from 'path';
 
 import paymentRoute from "./routes/payment-routes.js";
 import clientRoute from "./routes/client-routes.js";
+import userRoute from "./routes/user-routes.js";
 
 
 import dotenv from "dotenv";
@@ -27,6 +28,7 @@ app.use(cors());
 
 app.use("/api/payment", paymentRoute);
 app.use("/api/client", clientRoute);
+app.use("/api/user", userRoute);
 
 
 mongoose.connect(process.env.MONGO_CONNECTION_URL)

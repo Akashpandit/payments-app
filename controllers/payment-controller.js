@@ -6,9 +6,10 @@
 import mongoose from "mongoose";
 import Payment from "../model/Payment.js";
 import Client from "../model/Client.js"
+import e from "express";
 
 export const addPayment = async (req, res, next) => {
-    const { amount, date, description, paymentMode, client } = req.body;
+    const { amount, date, description, paymentMode, paymentType, client } = req.body;
 
     let existingClient;
     try {
@@ -27,14 +28,23 @@ export const addPayment = async (req, res, next) => {
         date,
         description,
         paymentMode,
+        paymentType,
         client
     });
-
+    let addSent = 0;
+    let addReceived = 0;
+    if (paymentType === "Received") {
+        addReceived = parseInt(amount)
+    } else {
+        addSent = parseInt(amount)
+    }
     try {
         const session = await mongoose.startSession();
         session.startTransaction();
         await payment.save({ session });
         existingClient.payments.push(payment);
+        existingClient.totalReceived += addReceived;
+        existingClient.totalSent += addSent;
         await existingClient.save({ session });
         await session.commitTransaction();
     } catch (err) {
@@ -64,12 +74,12 @@ export const getAllPayments = async (req, res, next) => {
 //Editing payment
 
 export const editPayment = async (req, res, next) => {
-    const { amount, date, paymentMode, description } = req.body;
+    const { amount, date, paymentMode, paymentType, description } = req.body;
 
     const payId = req.params.id; //getting the payment id from url
     let payment;
     try {
-        payment = await Payment.findByIdAndUpdate(payId, { amount, date, paymentMode, description });
+        payment = await Payment.findByIdAndUpdate(payId, { amount, date, paymentMode, paymentType, description });
     } catch (err) {
         return console.log(err)
     }
